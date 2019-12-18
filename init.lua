@@ -11,6 +11,12 @@ custom_bindings = {
 	rightHalf = {
 		{{"cmd"}, "right"}
 	},
+	fullScreen = {
+		{{"cmd"}, "return"}
+	},
+	center = {
+		{{"cmd", "alt"}, "c"}
+	},
 	undo = false,
 	redo = false
 }
