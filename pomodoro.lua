@@ -123,6 +123,3 @@ if pomo then
     format_menu()
     pomo.data.menu:setClickCallback(pomo_menu_click)
 end
-
--- local str = string.format ("[%s|%02d:%02d|#%02d]", pom.var.curr_active_type, time_min, time_sec, pom.var.work_count)
--- pom_menu:setTitle(str)
