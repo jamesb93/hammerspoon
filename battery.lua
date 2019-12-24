@@ -8,7 +8,7 @@ function battery_callback()
 
 		if power_source == "AC Power" then
 			battery_percentage:setTitle(
-				"(".."~"..math.floor(hs.battery.percentage()..")")
+				"(".."~"..math.floor(hs.battery.percentage())..")"
 			)
 		end
 
