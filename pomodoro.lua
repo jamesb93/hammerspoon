@@ -5,7 +5,7 @@ pomo = {}
 pomo.params = {
     work_dur = 60 * 20, -- 60 seconds * 25 minutes
     srest_dur = 60 * 5, -- 60 seconds * 5 minutes
-    lrest_dur = 60 * 10, -- 60 seconds * 10 minute
+    lrest_dur = 60 * 10 -- 60 seconds * 10 minute
 }
 
 pomo.data = {
@@ -119,7 +119,7 @@ function pomo_menu_click(mods)
 end
 
 if pomo then
-    timer = hs.timer.new(0.005, update_time)
+    timer = hs.timer.new(1, update_time)
     format_menu()
     pomo.data.menu:setClickCallback(pomo_menu_click)
 end
