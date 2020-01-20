@@ -2,6 +2,7 @@ require("battery")
 require("caffeine")
 require("keep_quiet")
 require("pomodoro")
+-- require("backup")
 
 -- Spectacle Replacement
 custom_bindings = {

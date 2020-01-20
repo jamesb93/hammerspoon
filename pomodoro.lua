@@ -3,7 +3,7 @@ pomo = {}
 
 -- Time parameters of the pomo
 pomo.params = {
-    work_dur = 60 * 20, -- 60 seconds * 25 minutes
+    work_dur = 60 * 20, -- 60 seconds * 20 minutes
     srest_dur = 60 * 5, -- 60 seconds * 5 minutes
     lrest_dur = 60 * 10 -- 60 seconds * 10 minute
 }
@@ -47,9 +47,14 @@ function reset_all()
     format_menu()
 end
 
-function alert(display_string)
-    hs.alert.show(display_string, 1)
-    pomo.data.sound:play()
+function alert(alert_type)
+    if alert_type == "end_work" then
+        hs.osascript.applescriptFromFile("/Users/james/.hammerspoon/as/end_work.applescript")
+    elseif alert_type == "end_rest_s" then
+        hs.osascript.applescriptFromFile("/Users/james/.hammerspoon/as/end_rest_s.applescript")
+    elseif alert_type == "end_rest_l" then
+        hs.osascript.applescriptFromFile("/Users/james/.hammerspoon/as/end_rest_s.applescript")
+    end
 end
 
 -- Called everytime the timer updates. Implemented as a callback function
@@ -63,7 +68,7 @@ function update_time()
         timer:stop()
         -- Now figure out where to go next
         if pomo.data.state == "work" then -- if it was a work period
-            alert("Work Complete")
+            alert("end_work")
             if pomo.data.work_count >= 2 then
                 pomo.data.time_now = pomo.params.lrest_dur
                 pomo.data.state = "lrest"
@@ -75,14 +80,14 @@ function update_time()
             end
 
         elseif pomo.data.state == "srest" then -- if it was a short rest period
-            alert("Short Rest Complete")
+            alert("end_rest_s")
             pomo.data.work_count = pomo.data.work_count+1
             pomo.data.time_now = pomo.params.work_dur
             pomo.data.state = "work"
             pomo.data.active = false
 
         elseif pomo.data.state == "lrest" then -- if it was a long rest period
-            alert("Long Rest Complete")
+            alert("end_rest_l")
             pomo.data.work_count = 0
             pomo.data.time_now = pomo.params.work_dur
             pomo.data.state = "work"
@@ -119,7 +124,7 @@ function pomo_menu_click(mods)
 end
 
 if pomo then
-    timer = hs.timer.new(1, update_time)
+    timer = hs.timer.new(0.005, update_time)
     format_menu()
     pomo.data.menu:setClickCallback(pomo_menu_click)
 end
