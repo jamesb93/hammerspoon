@@ -6,7 +6,7 @@ pomo.params = {
     work_dur = 60 * 20, -- 60 seconds * 20 minutes
     srest_dur = 60 * 5, -- 60 seconds * 5 minutes
     lrest_dur = 60 * 15, -- 60 seconds * 15 minute
-    logpath = "/Users/james/.pomolog",
+    logpath = "/Users/james/.pomo/.pomolog",
     timecoef = 1,
     chronoid = "pomodatetimeid"
 }
