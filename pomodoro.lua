@@ -3,7 +3,7 @@ pomo = {}
 
 -- Time parameters of the pomo
 pomo.params = {
-    work_dur = 60 * 20, -- 60 seconds * 20 minutes
+    work_dur = 60 * 3, -- 60 seconds * 20 minutes
     srest_dur = 60 * 5, -- 60 seconds * 5 minutes
     lrest_dur = 60 * 10, -- 60 seconds * 10 minute
     logpath = "/Users/james/.pomolog",
@@ -28,30 +28,32 @@ print_map = {
 }
 
 function daily_check()
-    -- Returns true if this is the first daily write
-    -- Returns false otherwise
+    -- Returns true if this is the first daily write otherwise false
 
     id = os.date("%x")
-
-    for k, v in pairs(hs.settings.getKeys()) do
-        if k == pomo.params.chronoid then
-            stored_id = hs.settings.get(pomo.params.chronoid)
-            if stored_id ~= id then
-                hs.settings.set(pomo.params.chronoid, id)
-                return true
-            else
-                return false
-            end
-        else
+    print(id)
+    print(hs.settings.get(pomo.params.chronoid))
+    settings = hs.settings.getKeys()
+    if settings[pomo.params.chronoid] ~= nil then
+        if id ~= hs.settings.get(pomo.params.chronoid) then
+            print('stored id does not match')
             hs.settings.set(pomo.params.chronoid, id)
             return true
+        else
+            print('ids match so no need to write')
+            return false
         end
+    else
+        print('I should run once')
+        hs.settings.set(pomo.params.chronoid, id)
+        return true
     end
 end
 
 function log_entry(entry)
     log = io.open(pomo.params.logpath, "a")
     log:write(entry)
+    log:write("\n")
     log:close()
 end
 
@@ -99,11 +101,6 @@ function update_time()
 
     if pomo.data.time_now <= 0 then -- when we get to the end of any timer
         timer:stop()
-        if daily_check() then log_entry(os.date("---- %c ----")) end
-        local _, pomo_desc = hs.dialog.textPrompt("Pomo Description", "Give a description to your pomo", "", "Okay", "", false)
-        log_entry(
-            os.date("%X") .. " | " .. pomo_desc
-        )
         -- Now figure out where to go next
         if pomo.data.state == "work" then -- if it was a work period
             alert("end_work")
@@ -139,8 +136,16 @@ end
 function pomo_state_check()
     if pomo.data.active == false then -- the pomodoro hasnt been started
         if pomo.data.pause == false then -- and its not paused
-            pomo.data.active = true
+            pomo.data.active = true            
+            if daily_check() then log_entry(os.date("\n---- %c ----")) end
+            local _, pomo_desc = hs.dialog.textPrompt("Pomo Description", "Give a description to your pomo", "", "", "", false)
+
+            log_entry(
+                os.date("%X") .. " | " .. pomo_desc
+            )
+
             timer:start()
+
         end
     elseif pomo.data.active == true then -- the pomodoro has been started
         if pomo.data.pause == false then -- and its not paused
