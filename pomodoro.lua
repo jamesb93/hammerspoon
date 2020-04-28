@@ -5,7 +5,10 @@ pomo = {}
 pomo.params = {
     work_dur = 60 * 20, -- 60 seconds * 20 minutes
     srest_dur = 60 * 5, -- 60 seconds * 5 minutes
-    lrest_dur = 60 * 10 -- 60 seconds * 10 minute
+    lrest_dur = 60 * 10, -- 60 seconds * 10 minute
+    logpath = "/Users/james/.pomolog",
+    timecoef = 0.01,
+    chronoid = "pomodatetimeid"
 }
 
 pomo.data = {
@@ -23,6 +26,35 @@ print_map = {
     srest = "r",
     lrest = "r"
 }
+
+function daily_check()
+    -- Returns true if this is the first daily write
+    -- Returns false otherwise
+
+    id = os.date("%x")
+
+    for k, v in pairs(hs.settings.getKeys()) do
+        if k == pomo.params.chronoid then
+            stored_id = hs.settings.get(pomo.params.chronoid)
+            if stored_id ~= id then
+                hs.settings.set(pomo.params.chronoid, id)
+                return true
+            else
+                return false
+            end
+        else
+            hs.settings.set(pomo.params.chronoid, id)
+            return true
+        end
+    end
+end
+
+function log_entry(entry)
+    log = io.open(pomo.params.logpath, "a")
+    log:write(entry)
+    log:close()
+end
+
 
 function format_menu()
     local mins = string.format("%02.f", math.floor(pomo.data.time_now/60));
@@ -58,6 +90,7 @@ function alert(alert_type)
 end
 
 -- Called everytime the timer updates. Implemented as a callback function
+
 -- This function does a lot of checking to see which state it is in
 function update_time()
     -- Whenever the timer updates we need to subtract 1 second & format
@@ -66,6 +99,11 @@ function update_time()
 
     if pomo.data.time_now <= 0 then -- when we get to the end of any timer
         timer:stop()
+        if daily_check() then log_entry(os.date("---- %c ----")) end
+        local _, pomo_desc = hs.dialog.textPrompt("Pomo Description", "Give a description to your pomo", "", "Okay", "", false)
+        log_entry(
+            os.date("%X") .. " | " .. pomo_desc
+        )
         -- Now figure out where to go next
         if pomo.data.state == "work" then -- if it was a work period
             alert("end_work")
@@ -124,7 +162,7 @@ function pomo_menu_click(mods)
 end
 
 if pomo then
-    timer = hs.timer.new(0.005, update_time)
+    timer = hs.timer.new(pomo.params.timecoef, update_time)
     format_menu()
     pomo.data.menu:setClickCallback(pomo_menu_click)
 end
