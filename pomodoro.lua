@@ -8,7 +8,7 @@ pomo.params = {
     lrest_dur = 60 * 15, -- 60 seconds * 15 minute
     logpath = "/Users/james/.pomo/.pomolog",
     timecoef = 1,
-    chronoid = "pomodatetimeid"
+    chronoid = "pomoid"
 }
 
 pomo.data = {
@@ -31,20 +31,15 @@ function daily_check()
     -- Returns true if this is the first daily write otherwise false
 
     id = os.date("%x")
-    print(id)
-    print(hs.settings.get(pomo.params.chronoid))
     settings = hs.settings.getKeys()
     if settings[pomo.params.chronoid] ~= nil then
         if id ~= hs.settings.get(pomo.params.chronoid) then
-            print('stored id does not match')
             hs.settings.set(pomo.params.chronoid, id)
             return true
         else
-            print('ids match so no need to write')
             return false
         end
     else
-        print('I should run once')
         hs.settings.set(pomo.params.chronoid, id)
         return true
     end
@@ -136,14 +131,15 @@ end
 function pomo_state_check()
     if pomo.data.active == false then -- the pomodoro hasnt been started
         if pomo.data.pause == false then -- and its not paused
-            pomo.data.active = true            
-            if daily_check() then log_entry(os.date("\n---- %c ----")) end
-            local _, pomo_desc = hs.dialog.textPrompt("Pomo Description", "Give a description to your pomo", "", "", "", false)
+            pomo.data.active = true
+            if pomo.data.state == "work" then
+                if daily_check() then log_entry(os.date("\n---- %c ----")) end
+                local _, pomo_desc = hs.dialog.textPrompt("Pomo Description", "Give a description to your pomo", "", "", "", false)
 
-            log_entry(
-                os.date("%X") .. " | " .. pomo_desc
-            )
-
+                log_entry(
+                    os.date("%X") .. " | " .. pomo_desc
+                )
+            end
             timer:start()
 
         end
