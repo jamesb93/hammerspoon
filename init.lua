@@ -1,4 +1,4 @@
--- require("battery")
+require("battery")
 require("caffeine")
 require("keep_quiet")
 require("pomodoro")
