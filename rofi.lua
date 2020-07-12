@@ -50,9 +50,10 @@ function rofi()
 	chooser:queryChangedCallback(function(textinput)
 		distances = {}
 		for k, v in pairs(valid_wins) do
-			distances[k] = lib.edit_distance(
+			distances[k] = lib.damleven(
 				textinput, 
-				v:application():name()
+				v:application():name(),
+				4
 			)
 		end
 
