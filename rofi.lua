@@ -1,6 +1,5 @@
 require("lib")
 
--- 2. Filter and Update the view
 local valid_wins = {}
 local chooser = hs.chooser.new(function(choice)
 	if choice then 
@@ -41,12 +40,10 @@ function rofi()
 				["text"] = id,
 				["subText"] = PID
 			}
-
 		end
 	end
 
 	chooser:choices(choices)
-	
 	chooser:queryChangedCallback(function(ins)
 		distances = {}
 		for k, v in pairs(valid_wins) do
