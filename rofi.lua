@@ -47,14 +47,11 @@ function rofi()
 
 	chooser:choices(choices)
 	
-	chooser:queryChangedCallback(function(textinput)
+	chooser:queryChangedCallback(function(ins)
 		distances = {}
 		for k, v in pairs(valid_wins) do
-			distances[k] = lib.damleven(
-				textinput, 
-				v:application():name(),
-				4
-			)
+			local n = v:application():name()
+			distances[k] = lib.damleven(ins, n) * (1.0 / lib.weightearly(ins, n, 2))
 		end
 
 		table.sort(choices, customSort)
