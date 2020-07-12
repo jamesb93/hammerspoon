@@ -1,6 +1,6 @@
 lib = {}
 
-lib.levenshtein_distance = function(str1, str2)
+lib.levenshtein = function(str1, str2)
     -- Take the distance between two strings
     local len1, len2 = #str1, #str2
     local char1, char2, distance = {}, {}, {}
@@ -21,7 +21,7 @@ lib.levenshtein_distance = function(str1, str2)
     return distance[len1][len2]
 end
 
-lib.edit_distance = function( s, t, lim )
+lib.damleven = function( s, t, lim )
     -- A fairly light implementation of the Damerau-Levenshtein distance algo
     -- Thank you internets https://gist.github.com/Nayruden/427389
     local s_len, t_len = #s, #t -- Calculate the sizes of the strings or arrays
@@ -86,5 +86,7 @@ lib.edit_distance = function( s, t, lim )
     
     return d[#d]
 end
+
+
 
 return lib
