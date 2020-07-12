@@ -87,6 +87,31 @@ lib.damleven = function( s, t, lim )
     return d[#d]
 end
 
+lib.weightearly = function(query, appname, limit)
+    -- Returns a scalar to modify the distance becased on early matches.
+    -- This will help to make immediate matches more heavily preferenced
+    local limit = limit or 5
+    local a = query:sub(0, limit)
+    local b = appname:sub(0, limit)
+    a = a:lower()
+    b = b:lower()
+    local ta = {}
+    local tb = {}
+    a:gsub(".",function(c) table.insert(ta,c) end)
+    b:gsub(".",function(c) table.insert(tb,c) end)
+    local count = 0
+    for i=1, #ta do
+        if ta[i] == tb[i] then 
+            count = count + 1 
+        else
+            return count+1
+        end
+    end
+    return count+1
+end
 
+lib.insert = function(str1, str2, pos)
+    return str1:sub(1,pos)..str2..str1:sub(pos+1)
+end
 
 return lib
