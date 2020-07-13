@@ -11,13 +11,8 @@ local chooser = hs.chooser.new(function(choice)
 	valid_wins = {}
 end)
 -- Set the sub text to be transparent
-local subColor = {
-	red = 0.8,
-	green = 0.8,
-	blue = 0.8,
-	alpha = 0.25
-}
-chooser:subTextColor(subColor)
+-- local subColor = {red = 0.8, green = 0.8, blue = 0.8, alpha = 0.25}
+-- chooser:subTextColor(subColor)
 
 function customSort(a, b)
 	-- Get the text value of each a and b and query the distance table with that text
