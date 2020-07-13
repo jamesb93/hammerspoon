@@ -9,8 +9,8 @@ fz.damleven = function( s, t, lim )
     end
     
     -- Convert string arguments to arrays of ints (ASCII values)
-    s = {string.byte( s, 1, s_len ) }
-    t = {string.byte( t, 1, t_len ) }
+    local s = {string.byte( s, 1, s_len ) }
+    local t = {string.byte( t, 1, t_len ) }
     
     local min = math.min -- Localize for performance
     local num_columns = t_len + 1 -- We use this a lot
