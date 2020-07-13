@@ -1,4 +1,5 @@
 require("lib")
+require("fzsearch")
 
 local valid_wins = {}
 local chooser = hs.chooser.new(function(choice)
@@ -19,27 +20,23 @@ local subColor = {
 chooser:subTextColor(subColor)
 
 function customSort(a, b)
-	id1 = a["text"]
-	id2 = b["text"]
-	dist1 = distances[id1]
-	dist2 = distances[id2]
-	return dist1 < dist2
+	-- Get the text value of each a and b and query the distance table with that text
+	return distances[a["text"]] < distances[b["text"]]
 end
 
 function rofi()
+	chooser:query("")
 	local wins = hs.window.allWindows()
 	local choices = {}
-	for k, v in pairs(wins) do
-		local title = v:title()
+
+	for i=1, #wins do
+		local title = wins[i]:title()
 		if title ~= "" then
-			local app = v:application():name()
-			local PID = tostring(v:id())
-			id = tostring(app.."  |  "..title)
-			valid_wins[id] = v
-			choices[#choices+1] = {
-				["text"] = id,
-				["subText"] = PID
-			}
+			local app = wins[i]:application():name()
+			local PID = tostring(wins[i]:id())
+			local id = app.." | "..title
+			valid_wins[id] = wins[i]
+			choices[#choices+1] = {["text"] = id, ["subText"] = PID}
 		end
 	end
 
@@ -48,7 +45,7 @@ function rofi()
 		distances = {}
 		for k, v in pairs(valid_wins) do
 			local n = v:application():name()
-			distances[k] = lib.damleven(ins, n) * (1.0 / lib.weightearly(ins, n, 2))
+			distances[k] = fz.damleven(ins, n) * (1.0 / fz.weightearly(ins, n, 2))
 		end
 
 		table.sort(choices, customSort)
