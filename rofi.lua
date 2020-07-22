@@ -1,4 +1,3 @@
-require("lib")
 require("fzsearch")
 
 local valid_wins = {}
