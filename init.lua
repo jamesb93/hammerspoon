@@ -1,7 +1,1 @@
-require("battery")
-require("caffeine")
 require("keep_quiet")
-require("rofi")
-require("skhd")
-require("cputemp")
--- require("pomodoro")
