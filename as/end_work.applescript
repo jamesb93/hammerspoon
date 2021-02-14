@@ -1,1 +1,0 @@
-display notification "Take a break" with title "Pomodoro" subtitle "End of work period"
