@@ -32,7 +32,6 @@ function format_menu()
     local mins = string.format("%02.f", math.floor(pomo.data.time_now/60));
     local seconds = string.format("%02.f", math.floor(pomo.data.time_now-(mins*60)))
     local formed = string.format(
-        -- "[%s |%01d| %s:%s]", 
         "[%s %s:%s]", 
         print_map[pomo.data.state], 
         mins,
@@ -72,6 +71,7 @@ function update_time()
         -- Now figure out where to go next
         if pomo.data.state == "work" then -- if it was a work period
             alert("end_work")
+            add_entry(pomo.data.project)
             if pomo.data.work_count >= 2 then
                 pomo.data.time_now = pomo.params.lrest_dur
                 pomo.data.state = "lrest"
@@ -105,9 +105,6 @@ function pomo_state_check()
     if pomo.data.active == false then -- the pomodoro hasnt been started
         if pomo.data.pause == false then -- and its not paused
             pomo.data.active = true
-            if pomo.data.state == "work" then
-                add_entry(pomo.data.project)
-            end
             timer:start()
         end
     elseif pomo.data.active == true then -- the pomodoro has been started
