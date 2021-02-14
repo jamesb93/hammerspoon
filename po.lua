@@ -1,3 +1,5 @@
+require("po_notify")
+require("po_data")
 -- Construct a 'pomo'
 pomo = {}
 
@@ -6,19 +8,18 @@ pomo.params = {
     work_dur = 60 * 20, -- 60 seconds * 20 minutes
     srest_dur = 60 * 5, -- 60 seconds * 5 minutes
     lrest_dur = 60 * 15, -- 60 seconds * 15 minute
-    logpath = "/Users/james/.pomo/.pomolog",
-    timecoef = 1,
-    chronoid = "pomoid"
+    timecoef = 1, -- can be lowered for testing
 }
 
 pomo.data = {
     state = "work",
     time_now = pomo.params.work_dur,
     menu = hs.menubar.new(),
+    project_chooser = hs.menubar.new(),
+    project = "phd",
     work_count = 0,
     active = false,
     pause = false,
-    sound = hs.sound.getByName("Glass")
 }
 
 print_map = {
@@ -27,39 +28,13 @@ print_map = {
     lrest = "r"
 }
 
-function daily_check()
-    -- Returns true if this is the first daily write otherwise false
-
-    id = os.date("%x")
-    settings = hs.settings.getKeys()
-    if settings[pomo.params.chronoid] ~= nil then
-        if id ~= hs.settings.get(pomo.params.chronoid) then
-            hs.settings.set(pomo.params.chronoid, id)
-            return true
-        else
-            return false
-        end
-    else
-        hs.settings.set(pomo.params.chronoid, id)
-        return true
-    end
-end
-
-function log_entry(entry)
-    log = io.open(pomo.params.logpath, "a")
-    log:write(entry)
-    log:write("\n")
-    log:close()
-end
-
-
 function format_menu()
     local mins = string.format("%02.f", math.floor(pomo.data.time_now/60));
     local seconds = string.format("%02.f", math.floor(pomo.data.time_now-(mins*60)))
     local formed = string.format(
-        "[%s |%01d| %s:%s]", 
+        -- "[%s |%01d| %s:%s]", 
+        "[%s %s:%s]", 
         print_map[pomo.data.state], 
-        pomo.data.work_count+1,
         mins,
         seconds
     )
@@ -78,11 +53,9 @@ end
 
 function alert(alert_type)
     if alert_type == "end_work" then
-        hs.osascript.applescriptFromFile("/Users/james/.hammerspoon/as/end_work.applescript")
-    elseif alert_type == "end_rest_s" then
-        hs.osascript.applescriptFromFile("/Users/james/.hammerspoon/as/end_rest_s.applescript")
-    elseif alert_type == "end_rest_l" then
-        hs.osascript.applescriptFromFile("/Users/james/.hammerspoon/as/end_rest_s.applescript")
+        work:send()
+    else
+        rest:send()
     end
 end
 
@@ -133,15 +106,9 @@ function pomo_state_check()
         if pomo.data.pause == false then -- and its not paused
             pomo.data.active = true
             if pomo.data.state == "work" then
-                if daily_check() then log_entry(os.date("\n---- %c ----")) end
-                local _, pomo_desc = hs.dialog.textPrompt("Pomo Description", "Give a description to your pomo", "", "", "", false)
-
-                log_entry(
-                    os.date("%X") .. " | " .. pomo_desc
-                )
+                add_entry(pomo.data.project)
             end
             timer:start()
-
         end
     elseif pomo.data.active == true then -- the pomodoro has been started
         if pomo.data.pause == false then -- and its not paused
@@ -154,16 +121,35 @@ function pomo_state_check()
     end
 end
 
+pomo.data.project_chooser:setMenu({
+    {title = "PhD", fn = function() pomo.data.project = "phd"; pomo.data.project_chooser:setTitle(pomo.data.project) end},
+    {title = "Fell", fn = function() pomo.data.project = "fell"; pomo.data.project_chooser:setTitle(pomo.data.project) end},
+    {title = "MetaBow", fn = function() pomo.data.project = "metabow"; pomo.data.project_chooser:setTitle(pomo.data.project) end}
+})
+
 function pomo_menu_click(mods)
-    if mods["alt"] == false then
+    if mods then -- this was a click with modifiers not a keyboard shortcut
+        if mods["alt"] == false then
+            pomo_state_check()
+        elseif mods["alt"] == true then
+            reset_all()
+        end
+    else
         pomo_state_check()
-    elseif mods["alt"] == true then
-        reset_all()
     end
 end
+
+-- Make a hotkey to emulate the click
+hotkey = hs.hotkey.bind(
+        {"cmd", "shift"}, -- modifiers
+        "`", -- key
+        "pressed", --message,
+        pomo_menu_click()
+)
 
 if pomo then
     timer = hs.timer.new(pomo.params.timecoef, update_time)
     format_menu()
+    pomo.data.project_chooser:setTitle(pomo.data.project)
     pomo.data.menu:setClickCallback(pomo_menu_click)
 end
