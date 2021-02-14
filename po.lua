@@ -139,16 +139,19 @@ function pomo_menu_click(mods)
     end
 end
 
--- Make a hotkey to emulate the click
-hotkey = hs.hotkey.bind(
-        {"cmd", "shift"}, -- modifiers
-        "`", -- key
-        "pressed", --message,
-        pomo_menu_click()
-)
+
 
 if pomo then
     timer = hs.timer.new(pomo.params.timecoef, update_time)
+
+    -- Make a hotkey to emulate the click
+    hotkey = hs.hotkey.bind(
+        {"cmd", "shift"}, -- modifiers
+        "`", -- key
+        "Pomodoro Toggled", --message,
+        pomo_menu_click -- function when pressed
+    )
+
     format_menu()
     pomo.data.project_chooser:setTitle(pomo.data.project)
     pomo.data.menu:setClickCallback(pomo_menu_click)
