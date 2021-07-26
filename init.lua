@@ -1,2 +1,3 @@
 require("keep_quiet")
-require("po")
+-- require("po")
+require("binds")

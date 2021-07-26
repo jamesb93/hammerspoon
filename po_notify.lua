@@ -13,3 +13,10 @@ rest = hs.notify.new(nil, {
     subtitle = "rest period has ended",
     soundName = "Hero.aiff"
 })
+
+warning = hs.notify.new(nil, {
+    autoWithdraw = true,
+    title="Almost there!",
+    subTitle = "Five minutes remaining",
+    soundName = "Blow.aiff"
+})

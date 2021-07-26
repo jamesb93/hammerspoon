@@ -50,16 +50,6 @@ function reset_all()
     format_menu()
 end
 
-function alert(alert_type)
-    if alert_type == "end_work" then
-        work:send()
-    else
-        rest:send()
-    end
-end
-
--- Called everytime the timer updates. Implemented as a callback function
-
 -- This function does a lot of checking to see which state it is in
 function update_time()
     -- Whenever the timer updates we need to subtract 1 second & format
@@ -70,7 +60,7 @@ function update_time()
         timer:stop()
         -- Now figure out where to go next
         if pomo.data.state == "work" then -- if it was a work period
-            alert("end_work")
+            work:send()
             add_entry(pomo.data.project)
             if pomo.data.work_count >= 2 then
                 pomo.data.time_now = pomo.params.lrest_dur
@@ -83,20 +73,24 @@ function update_time()
             end
 
         elseif pomo.data.state == "srest" then -- if it was a short rest period
-            alert("end_rest_s")
+            rest:send()
             pomo.data.work_count = pomo.data.work_count+1
             pomo.data.time_now = pomo.params.work_dur
             pomo.data.state = "work"
             pomo.data.active = false
 
         elseif pomo.data.state == "lrest" then -- if it was a long rest period
-            alert("end_rest_l")
+            rest:send()
             pomo.data.work_count = 0
             pomo.data.time_now = pomo.params.work_dur
             pomo.data.state = "work"
             pomo.data.active = false
             pomo.data.pause = false
         end
+    end
+
+    if pomo.data.time_now == 300 and pomo.data.state == "work" then
+        warning:send()
     end
 end
 
@@ -120,8 +114,6 @@ end
 
 pomo.data.project_chooser:setMenu({
     {title = "PhD", fn = function() pomo.data.project = "phd"; pomo.data.project_chooser:setTitle(pomo.data.project) end},
-    {title = "Fell", fn = function() pomo.data.project = "fell"; pomo.data.project_chooser:setTitle(pomo.data.project) end},
-    {title = "MetaBow", fn = function() pomo.data.project = "metabow"; pomo.data.project_chooser:setTitle(pomo.data.project) end}
 })
 
 function pomo_menu_click(mods)
