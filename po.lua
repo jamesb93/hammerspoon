@@ -16,7 +16,7 @@ pomo.data = {
     time_now = pomo.params.work_dur,
     menu = hs.menubar.new(),
     project_chooser = hs.menubar.new(),
-    project = "phd",
+    project = "flucoma",
     work_count = 0,
     active = false,
     pause = false,
@@ -113,7 +113,13 @@ function pomo_state_check()
 end
 
 pomo.data.project_chooser:setMenu({
-    {title = "PhD", fn = function() pomo.data.project = "phd"; pomo.data.project_chooser:setTitle(pomo.data.project) end},
+    {
+    	title = "flucoma", 
+    	fn = function() 
+    		pomo.data.project = "flucoma"; 
+    		pomo.data.project_chooser:setTitle(pomo.data.project) 
+    	end
+   	},
 })
 
 function pomo_menu_click(mods)
