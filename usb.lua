@@ -23,9 +23,17 @@ end
 function watch(e)
     local event = e.eventType
     local id = e.productID
-    print(event, id)
+    local name = e.productName
 
     if (id == 52225 and event =='added') then
+        wifi_state(true)
+    end
+
+    if (id == 50475 and event == 'added') then
+        wifi_state(false)
+    end
+
+    if (id == 50475 and event == 'removed') then
         wifi_state(true)
     end
 
