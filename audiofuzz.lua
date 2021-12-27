@@ -1,5 +1,3 @@
-hs.alert.show("Hammerspoon config loaded")
-
 hyper = {"cmd", "shift"}
 
 
@@ -13,9 +11,10 @@ function fuzzy(choices, func)
   local chooser = hs.chooser.new(func)
   chooser:choices(choices)
   chooser:searchSubText(true)
-  chooser:fgColor({hex="#bbf"})
-  chooser:subTextColor({hex="#aaa"})
-  chooser:width(25)
+  chooser:fgColor({ hex="#bbf" })
+  chooser:subTextColor({ hex="#aaa" })
+  chooser:width(30)
+  chooser:rows(4)
   chooser:show()
 end
 
