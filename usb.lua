@@ -36,9 +36,6 @@ function watch(e)
     if (id == 50475 and event == 'removed') then
         wifi_state(true)
     end
-
-    -- Switch to Fireface @ Home
-    -- if (id == 16328 and event == 'added') then set_fireface_output() end
 end
 
 watcher = hs.usb.watcher.new(watch)
