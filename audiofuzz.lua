@@ -1,11 +1,5 @@
 hyper = {"cmd", "shift"}
 
-function bindCmd(char, cmd)
-  hs.hotkey.bind(hyper, char, function()
-    hs.execute(cmd, true)
-  end)
-end
-
 function fuzzy(choices, func)
   local chooser = hs.chooser.new(func)
   chooser:choices(choices)
