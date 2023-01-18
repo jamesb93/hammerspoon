@@ -25,15 +25,15 @@ function watch(e)
     local id = e.productID
     local name = e.productName
 
-    if (id == 52225 and event =='added') then
+    if (id == 1033 and event =='added') then
         wifi_state(true)
     end
 
-    if (id == 50475 and event == 'added') then
+    if (id == 1033 and event == 'added') then
         wifi_state(false)
     end
 
-    if (id == 50475 and event == 'removed') then
+    if (id == 1033 and event == 'removed') then
         wifi_state(true)
     end
 end
