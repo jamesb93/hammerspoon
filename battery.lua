@@ -1,6 +1,6 @@
 ---------- Battery Percentage ----------
 -- battery_percentage = hs.menubar.newWithPriority()
-battery_percentage = hs.menubar.new()
+battery_percentage = hs.menubar.new(true, 'battery_percentage')
 
 function battery_callback()
 	if battery_percentage then

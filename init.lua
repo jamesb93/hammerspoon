@@ -1,5 +1,6 @@
--- require('ivanti')
+require('ivanti')
 require('audiofuzz')
 require('keep_quiet')
--- require('lnht')
 require('spectacle')
+require('battery')
+require('autotile')
