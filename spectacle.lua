@@ -1,4 +1,3 @@
-local math = require('hs.math')
 local hyper = {"cmd"}
 
 local function getWindows()
@@ -14,12 +13,12 @@ end
 local function calcNextRatio(win, screen, command)
 	-- Is it on the left and you're asking to go on the right?
 
-	if command == 'left' then
-		if win.x + (win.w / 2) >= screen.w / 2 then return 2 end
+	if command == 'left' and win.x + (win.w / 2) >= screen.w / 2 then
+		return 2
 	end
 	
-	if command == 'right' then
-		if win.x + (win.w / 2) < screen.w / 2 then return 2 end -- if it was on the left
+	if command == 'right' and win.x + (win.w / 2) < screen.w / 2 then
+		return 2
 	end
 
 	-- calculates the ratio that the screen takes up currently
