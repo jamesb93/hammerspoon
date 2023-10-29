@@ -6,35 +6,31 @@
 --     'Fireface UFX (23752577)' = 'de_RME_driver_USBAudioEngine:16A6F81'
 -- }
 
+-- function set_fireface_output()
+--     audio_devices = hs.audiodevice.allOutputDevices()
+--     local current = hs.audiodevice.current()
+--     if (current.uid ~= 'de_RME_driver_USBAudioEngine:16A6F81') then
+--         hs.audiodevice
+--         .findDeviceByUID('de_RME_driver_USBAudioEngine:16A6F81')
+--         :setDefaultOutputDevice()
+--     end
+-- end
+
 function wifi_state(state)
     hs.wifi.setPower(state, 'en0')
-end
-
-function set_fireface_output()
-    audio_devices = hs.audiodevice.allOutputDevices()
-    local current = hs.audiodevice.current()
-    if (current.uid ~= 'de_RME_driver_USBAudioEngine:16A6F81') then
-        hs.audiodevice
-        .findDeviceByUID('de_RME_driver_USBAudioEngine:16A6F81')
-        :setDefaultOutputDevice()
-    end
 end
 
 function watch(e)
     local event = e.eventType
     local id = e.productID
     local name = e.productName
-
-    if (id == 1033 and event =='added') then
-        wifi_state(true)
-    end
-
-    if (id == 1033 and event == 'added') then
-        wifi_state(false)
-    end
-
-    if (id == 1033 and event == 'removed') then
-        wifi_state(true)
+    
+    if (id == 33107) then
+        if (event == 'added') then
+            wifi_state(false)
+        elseif (event == 'removed') then
+            wifi_state(true)
+        end
     end
 end
 
