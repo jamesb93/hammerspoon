@@ -1,5 +1,7 @@
+require('ping')
 -- require('ivanti')
 require('audiofuzz')
 require('keep_quiet')
--- require('battery')
+require('battery')
 require('usb')
+require('pomodoro')
