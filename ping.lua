@@ -22,12 +22,12 @@ function setPingTimeDisplay()
         end
     end
     local medianPingTimeDisplay = string.format("%.0f", medianPingTime)
-	local maxPingTimeDisplay    = string.format("%.0f", maxPingTime)
-	menubar_item:setTitle("🛜 "..medianPingTimeDisplay.." | "..maxPingTimeDisplay)
+    local maxPingTimeDisplay    = string.format("%.0f", maxPingTime)
+    menubar_item:setTitle("🛜 "..medianPingTimeDisplay.." | "..maxPingTimeDisplay)
 end
 
 function setFailure()
-	menubar_item:setTitle("🛜 🔴")
+    menubar_item:setTitle("🛜 🔴")
 end
 
 function doPing()
@@ -57,19 +57,25 @@ end
 doPing()
 timer = hs.timer.doEvery(3, doPing)
 
-function deepcopy(orig)
-    local orig_type = type(orig)
-    local copy
-    if orig_type == 'table' then
-        copy = {}
-        for orig_key, orig_value in next, orig, nil do
-            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+local function deepcopy(o, seen)
+    seen = seen or {}
+    if o == nil then return nil end
+    if seen[o] then return seen[o] end
+    
+    local no
+    if type(o) == 'table' then
+        no = {}
+        seen[o] = no
+        
+        for k, v in next, o, nil do
+            no[deepcopy(k, seen)] = deepcopy(v, seen)
         end
-        setmetatable(copy, deepcopy(getmetatable(orig)))
+        setmetatable(no, deepcopy(getmetatable(o), seen))
     else -- number, string, boolean, etc
-        copy = orig
+        no = o
     end
-    return copy
+    return no
 end
+
 
 
