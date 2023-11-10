@@ -31,11 +31,6 @@ function setFailure()
 end
 
 function doPing()
-    local s = ''
-    for i=1, #buffer do
-        s = s .. string.format("%.0f", buffer[i]) .. " "
-    end
-    print(s)
     pinger = hs.network.ping("8.8.8.8", 1, 0.001, 1, function(object, message, seqnum, error)
         if message == "didStart" then
             timeStart = hs.timer.secondsSinceEpoch()
