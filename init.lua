@@ -1,9 +1,10 @@
 require('audiofuzz')
 require('keep_quiet')
-require('battery')
-require('watson')
+require('emoj')
+-- require('battery')
+-- require('watson')
 -- require('usb')
 -- require('autotile')
 -- require('ivanti')
 -- require('pomodoro')
--- require('ping')
+-- require('ping'
